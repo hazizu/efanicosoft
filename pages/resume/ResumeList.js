@@ -15,23 +15,28 @@ import{BottomSheetModal,BottomSheetModalProvider} from "@gorhom/bottom-sheet"
 const ResumeListe = observer(({route,navigation}) =>{
     const [list, setList] = useState([]) 
     const [elementToUpdate, setElementToUpdate] = useState()
-    const [imageToUpdate , setImageToUpdate] = useState("")
-    
-    
-
-        const resume = route.params;
+    const [ isOpen, setIsOpen] = useState(false)
+    const [cacheUpdate, setCacheUpdate]=useState()
+    const [choiceNumber, setChoiceNumber] = useState(0);
+    const [unitPrice, setunitPrice] = useState(0);
+    const resume = route.params;
 
       // bottom-sheet config
+    const bottomSheetModalRef = useRef(null);
+    const snapPoints = ["50%"];
 
-      const bottomSheetModalRef = useRef(null);
-      const snapPoints = ["50%"];
+
+    //////////////////// FONCTIONS /////////////////////////
 
       function handlePresentModal(){
         bottomSheetModalRef.current?.present();
       }
 
-      const closeModal = () =>{
+      const closeModal = (element) =>{
         bottomSheetModalRef.current?.dismiss()
+        setIsOpen(false)
+        setunitPrice(cacheUpdate.price)
+        setChoiceNumber(cacheUpdate.quantite)
       }
      
 
@@ -52,32 +57,30 @@ const ResumeListe = observer(({route,navigation}) =>{
     const setUpElementToUp = () => {
         const element = elementToUpdate;
         let imageToUp = ""
-        
         if (element) {
           console.log('setUp==========', element);
+         
           if(element.libelle === "Chemise"){
             imageToUp = chemiseImage
           }else if(element.libelle === "Pantalon"){
-           
             imageToUp = pantalonImage
           }else if(element.libelle === "Jean"){
-          
             imageToUp = jeanImage
-          }else if(element.libelle ="robe"){
+          }else if(element.libelle === "robe"){
            
-            imageToUp =robeImage
+            imageToUp = robeImage
           }
           return (
             <View style={ styles.updatContainer}>
                <Image style={styles.imageUpStyle} source={imageToUp}></Image>
               <View style={styles.UpdateHead}>
                 <Text style={styles.updateStylibelle}>{element.libelle}</Text>
-                <Text style={styles.updateStylPrice}>{element.price} FCFA</Text>
+                <Text style={styles.updateStylPrice}>{unitPrice} FCFA</Text>
               </View>
               <View style={styles.UpdateBody}>
-                <TouchableOpacity style={styles.updateDecreStyle}><Text style={styles.UpdateDecreTextStyle}>-</Text></TouchableOpacity>
-                <Text style={styles.updateStylQuantite}>{element.quantite}</Text>
-                <TouchableOpacity style={styles.updateIncreStyle}><Text style={styles.UpdateIncreTextStyle}>+</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.updateDecreStyle} onPress={()=>getMoins(element)}><Text style={styles.UpdateDecreTextStyle}>-</Text></TouchableOpacity>
+                <Text style={styles.updateStylQuantite}>{choiceNumber}</Text>
+                <TouchableOpacity style={styles.updateIncreStyle} onPress={()=> getPlus(element)}><Text style={styles.UpdateIncreTextStyle}>+</Text></TouchableOpacity>
               </View>
 
               
@@ -90,23 +93,23 @@ const ResumeListe = observer(({route,navigation}) =>{
         }
         return null; // Renvoyez null ou un composant vide si elementToUpdate est null
       };
+
+    
     const updateCommande = (data)=>{
         if(data.action === "update"){
-            
+          setIsOpen(!isOpen)
           setElementToUpdate(data.element)
+          setCacheUpdate(data.element)
           const dd = elementToUpdate
-
             console.log('up up ====',  dd)
             handlePresentModal()
             
         }else{
-            console.log('suprimer')
+            console.log('suprimer') 
             deleteResumeAlert(data.element)
         }
     }
    
-
-    
 
     const deleteResumeAlert = (data) =>
     Alert.alert('Suppression', 'Voulez-vous vraiment le retirer de votre panier ?', [
@@ -129,10 +132,61 @@ const ResumeListe = observer(({route,navigation}) =>{
         })
     }
 
+
+    const getPlus = (choiced) => {
+        const newCount = choiceNumber + 1;
+        console.log('new count', newCount)
+        setChoiceNumber(newCount)
+        switch (choiced.libelle) {
+            case 'Chemise':
+                setunitPrice(newCount * 200)
+                break;
+            case 'Pantalon':
+                setunitPrice(newCount * 250);
+                break;
+            case 'Jean':
+                setunitPrice(newCount * 300);
+                break;
+            case 'Robe':
+                setunitPrice(newCount * 300)
+            default:
+                break;
+        }
+    }
+
+    const getMoins = (choiced) => {
+        if (choiceNumber > 0) {
+            const newCount = choiceNumber - 1;
+            setChoiceNumber(newCount)
+            switch (choiced.libelle) {
+                case 'Chemise':
+                    setunitPrice(newCount * 200)
+                    break;
+                case 'Pantalon':
+                    setunitPrice(newCount * 250);
+                    break;
+                case 'Jean':
+                    setunitPrice(newCount * 300);
+                    break;
+                case 'Robe':
+                    setunitPrice(newCount * 300)
+                default:
+                    break;
+            }
+        }
+    }
+
+    ///////////////// END FUNCTIONS /////////////////////////
+
   
 
     useEffect(()=>{
-
+        const item = elementToUpdate
+        if(item){
+        setunitPrice(item.price)
+        setChoiceNumber(item.quantite)
+        }
+        
         navigation.setOptions({title: 'Votre panier !'})
         console.log('resume', resume)
         console.log('list', stores.listeCommande)
@@ -150,12 +204,11 @@ const ResumeListe = observer(({route,navigation}) =>{
             disposer(); // Désabonnez-vous de la réaction lors du démontage du composant
           };
 
-       },[elementToUpdate])
-   
-
+    },[elementToUpdate])
     
     return(
 <BottomSheetModalProvider style={styles.container}>
+{isOpen && <View style={styles.overlay} />}
         <View style={styles.containerList}>
             {noResume()}
            
@@ -196,7 +249,8 @@ const styles = StyleSheet.create({
        flex:1,
        marginRight:15,
         marginLeft:15,
-        zIndex:-1
+        zIndex:-1,
+        backgroundColor:"red"
     },
     container:{
         flex:1,
@@ -207,9 +261,11 @@ const styles = StyleSheet.create({
     },
     flatListStyle:{
         marginLeft:15,
-        marginRight:15
+        marginRight:15,
+
 
     },
+
     bottomSheet:{
         width:'100%', 
         
@@ -229,7 +285,7 @@ const styles = StyleSheet.create({
     },
 
     sheetContainer:{
-        zIndex:9999,
+        zIndex:2,
         position:'relative'
     },
     closeModalBtn:{
@@ -331,8 +387,12 @@ const styles = StyleSheet.create({
         position:"absolute",
         top:-70,
         left:10
+    },
+    overlay:{
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+       
     }
-
     
 
  

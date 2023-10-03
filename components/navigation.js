@@ -73,7 +73,7 @@ const Navigation = observer(() => {
         gestureEnabled: false,
         animationEnabled: true,
         headerMode: 'screen',
-      }} initialRouteName='accueil'> 
+      }} initialRouteName='pageAccueil'> 
 
       <Stack.Screen name="pageAccueil" component={PageAccueil} />
 

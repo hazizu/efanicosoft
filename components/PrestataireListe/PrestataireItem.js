@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     tinyLogo: {
       width: 100,
       height: 100,
-      borderRadius:100/2
+      borderRadius:10
     },
     logo: {
       width: 66,
@@ -41,8 +41,9 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'center',
         padding:5,
-        backgroundColor:'#0fccce54',
-        margin:10,
+        backgroundColor:'#fff',
+        marginTop:8,
+        marginHorizontal:15,
         borderRadius:10
     },
     itemsStyle_info:{
