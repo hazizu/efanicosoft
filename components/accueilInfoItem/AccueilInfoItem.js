@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
       textAlign:"center",
       marginTop:60,
       marginBottom:40
-      
     },
     description: {
       fontSize: 18,
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         justifyContent:"space-around",
-        backgroundColor:'#0fccce',
+        backgroundColor:'#063970',
         borderRadius:10,
         paddingLeft:20
 

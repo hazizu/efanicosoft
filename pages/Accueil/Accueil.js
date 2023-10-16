@@ -8,11 +8,17 @@ import { observer } from 'mobx-react';
 import { reaction } from 'mobx';
 
 import LottieView from 'lottie-react-native';
+import CommuneItem from '../../components/communeitem/CommuneItem'
+import { Communes, CommuneYop, CommuneAbobo, CommuneKoumassi, CommuneMarcory, CommuneCocody, CommuneAdjame } from '../../Datas/CommuneData';
+
 
 const Accueil = observer(({navigation}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState('');
     const [list, setList] = useState([])
+    const [commune, setCommune] = useState()
+    const [isActive, setIsActive]=useState(true)
+    const [prestataire, setPrestataire] = useState(CommuneYop)
     
 
 
@@ -30,6 +36,32 @@ const Accueil = observer(({navigation}) => {
   const getPanier = ()=>{
     navigation.navigate('resumeList')
     
+  }
+  const communeEmit = (data)=>{
+    console.log("commune emited",data)
+    setCommune(data.id)
+    setIsActive(false)
+    switch(data.libelle){
+      case "Yopougon":
+        setPrestataire(CommuneYop);
+        break;
+      case "Abobo":
+        setPrestataire(CommuneAbobo);
+        break;
+      case "Koumassi":
+        setPrestataire(CommuneKoumassi);
+        break;
+      case "Marcory":
+        setPrestataire(CommuneMarcory);
+        break;
+      case "Cocody":
+        setPrestataire(CommuneCocody);
+        break;
+      case "Adjamé":
+        setPrestataire(CommuneAdjame);
+        break;
+    }
+
   }
 
   
@@ -57,9 +89,8 @@ const Accueil = observer(({navigation}) => {
     const rederList = () =>{
         if(!isLoading){
             return(
-              
                 <FlatList style={styles.flatList}
-                data={filteredData}
+                data={prestataire}
                 keyExtractor={item=>item.id}
                 renderItem={({item}) => {
                 return <PrestataireItem prestataire={item} navigation={navigation}/>
@@ -99,7 +130,29 @@ const Accueil = observer(({navigation}) => {
     </TouchableOpacity>
     </View>
 
+    <View style={styles.communeList}>
+
+    <FlatList
+    
+     data={Communes}
+     keyExtractor={item=>item.id}
+     horizontal
+     showsHorizontalScrollIndicator={false}
+     renderItem={({item})=>{
+      
+      return <CommuneItem active={(item.id === 1 && isActive) || commune === item.id } commune={item} onEventEmit={communeEmit} />
+     }}
+     
+  />
   </View>
+
+
+
+  </View>
+  {/* LSIT COMMUNES */}
+  
+
+  
     {rederList()}  
   
   {/* <FlatList style={styles.flatList}
@@ -169,6 +222,10 @@ const styles = StyleSheet.create({
       alignItems: 'center',
      
     },
+    communeList:{
+    
+     
+    }
 
   });
 

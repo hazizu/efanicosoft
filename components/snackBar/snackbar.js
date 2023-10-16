@@ -5,7 +5,7 @@ import { View, Text } from "react-native";
 const Snackbars = ({visible, onClose, message }) => {
 
     return (
-        <View style={{ flex: 1, flexDirection:"row", width:'100%', justifyContent:"center", alignItems:'center' }}>
+        <View style={{ position: 'absolute', start: 0 , end: 16,top:100, flex: 1, flexDirection:"row", width:'100%', justifyContent:"center", alignItems:'center' , zIndex:3, backgroundColor:'red'}}>
         <Snackbar
           visible={visible}
           onDismiss={onClose}
@@ -15,7 +15,7 @@ const Snackbars = ({visible, onClose, message }) => {
             onPress: onClose,
             textColor:'black'
           }}
-            style={{ position: 'absolute', start: 16 , end: 16, bottom:20, backgroundColor:'orange' }}
+            style={{ backgroundColor:'orange' }}
         >
           
         <Text style={{ color:'black'}}>

@@ -3,11 +3,11 @@ import { View,Text,FlatList,StyleSheet,Alert, TouchableOpacity, Image} from "rea
 import ResumeItem from "../../components/resumeItem/ResumeItem";
 import stores from "../../Store/store";
 import { observer } from "mobx-react";
-import { reaction } from "mobx";
+import { action, reaction } from "mobx";
 import { pantalonImage, chemiseImage, robeImage, jeanImage } from "./../../assets/imagesLinks"
 
 import{BottomSheetModal,BottomSheetModalProvider} from "@gorhom/bottom-sheet"
-
+import Snackbars from "../../components/snackBar/snackbar";
 
 
 
@@ -20,13 +20,26 @@ const ResumeListe = observer(({route,navigation}) =>{
     const [choiceNumber, setChoiceNumber] = useState(0);
     const [unitPrice, setunitPrice] = useState(0);
     const resume = route.params;
+    const [showSnackbar, setShowSnackbar] = useState(false)
+    const [snackMessage, setSnackMessage] = useState("")
+    const [totalCommande, setTotalCommande] = useState()
 
       // bottom-sheet config
-    const bottomSheetModalRef = useRef(null);
+    const bottomSheetModalRef = React.useRef(null);
     const snapPoints = ["50%"];
 
 
     //////////////////// FONCTIONS /////////////////////////
+
+    const calculPrice = (list) =>{
+        const totalPrice = list.reduce((accumulator, currentItem) => {
+            return accumulator + currentItem.price;
+          }, 0);
+          
+          console.log('Total Quantite:', totalPrice);
+          setTotalCommande(totalPrice)
+
+    }
 
       function handlePresentModal(){
         bottomSheetModalRef.current?.present();
@@ -84,8 +97,8 @@ const ResumeListe = observer(({route,navigation}) =>{
               </View>
 
               
-                <TouchableOpacity style={styles.updateBtn}>
-                    <Text style={styles.updatebtnText}>Modifier</Text>
+                <TouchableOpacity style={styles.updateBtn} onPress={()=>valideUpdate()}>
+                    <Text style={styles.updatebtnText}>Valider</Text>
                 </TouchableOpacity>
             
             </View>
@@ -109,7 +122,32 @@ const ResumeListe = observer(({route,navigation}) =>{
             deleteResumeAlert(data.element)
         }
     }
-   
+
+    const valideUpdate = ()=>{
+        const updatedListeCommande = stores.listeCommande.map((el) => {
+            if (el.libelle === elementToUpdate.libelle) {
+              return {
+                id: elementToUpdate.id,
+                libelle: elementToUpdate.libelle,
+                price: unitPrice,
+                quantite: choiceNumber,
+              };
+            } else {
+              return el; // Garder l'élément inchangé s'il ne correspond pas au libellé
+            }
+          });
+          stores.setListCommande(updatedListeCommande);
+          calculPrice(updatedListeCommande)
+
+          bottomSheetModalRef.current?.dismiss()
+          setIsOpen(false)
+
+          setShowSnackbar(true);
+        setSnackMessage('Quantité de ' + elementToUpdate.libelle + ' modifiée !!')
+        setTimeout(()=>{
+        setShowSnackbar(false);
+    }, 3000)
+    }
 
     const deleteResumeAlert = (data) =>
     Alert.alert('Suppression', 'Voulez-vous vraiment le retirer de votre panier ?', [
@@ -120,17 +158,20 @@ const ResumeListe = observer(({route,navigation}) =>{
       },
       {text: 'OUI', onPress: () => deleteItem(data)},
     ]);
+   
+    
 
-    const deleteItem = (data)=>{
+    const deleteItem = action((data)=>{
         console.log('element', data)
         stores.listeCommande.forEach((el, index)=>{
             if(el.libelle === data.libelle){
                 stores.listeCommande.splice(index,1)
-                stores.setListCommande(stores.listeCommande)
-
+                const lis = stores.listeCommande
+                stores.setListCommande(lis)
+                calculPrice(stores.listeCommande)
             }
         })
-    }
+    })
 
 
     const getPlus = (choiced) => {
@@ -176,20 +217,28 @@ const ResumeListe = observer(({route,navigation}) =>{
         }
     }
 
+    const goToSuivi = ()=>{
+        console.log('navii======================', navigation)
+    navigation.push('suiviCommande', {
+        data:stores.listeCommande
+    })
+    }
+
     ///////////////// END FUNCTIONS /////////////////////////
 
   
 
     useEffect(()=>{
-        const item = elementToUpdate
+        const item = elementToUpdate 
         if(item){
         setunitPrice(item.price)
         setChoiceNumber(item.quantite)
         }
         
-        navigation.setOptions({title: 'Votre panier !'})
+        navigation.setOptions({title: 'Votre panier !'}) 
         console.log('resume', resume)
         console.log('list', stores.listeCommande)
+        calculPrice(stores.listeCommande)
 
         const disposer = reaction(
             () => stores.listeCommande, // Suivre les changements du tableau todos dans le store
@@ -211,7 +260,6 @@ const ResumeListe = observer(({route,navigation}) =>{
 {isOpen && <View style={styles.overlay} />}
         <View style={styles.containerList}>
             {noResume()}
-           
                 <FlatList style={styles.flatListStyle}
                 data={stores.listeCommande}
                 keyExtractor={item => item.id}
@@ -221,21 +269,32 @@ const ResumeListe = observer(({route,navigation}) =>{
                     )
                 }}
             />
+            <TouchableOpacity style={styles.validateCommnade}>
+                <Text style={styles.validateCommnadeText} onPress={()=>goToSuivi()}>Valider ({totalCommande} Fcfa)</Text>
+            </TouchableOpacity>
             
             <BottomSheetModal
             ref={bottomSheetModalRef}
             index={0}
             snapPoints={snapPoints}
             style={styles.sheetContainer}
+            dismissOnPanDown={false}
+            enablePanDownToClose={true}
+            onDismiss={() => {
+                closeModal()
+              }}
             >
-                
                 <TouchableOpacity style={styles.closeModalBtn} onPress={ closeModal}>
                     <Text>Fermer</Text>
                </TouchableOpacity>
                {setUpElementToUp()}
-            
-                
             </BottomSheetModal>
+
+    <Snackbars
+        visible={showSnackbar} // Prop pour gérer l'affichage de la Snackbar
+        onClose={() => setShowSnackbar(false)} // Prop pour gérer la fermeture de la Snackbar
+        message={snackMessage}
+      />
         </View>
 </BottomSheetModalProvider>
     )
@@ -250,18 +309,19 @@ const styles = StyleSheet.create({
        marginRight:15,
         marginLeft:15,
         zIndex:-1,
-        backgroundColor:"red"
+        
     },
     container:{
         flex:1,
     },
     containerList:{
         flex:1,
-        zIndex:-1
+        zIndex:-1,
+        marginHorizontal:15,
+        
     },
     flatListStyle:{
-        marginLeft:15,
-        marginRight:15,
+       
 
 
     },
@@ -341,7 +401,7 @@ const styles = StyleSheet.create({
     },
     updateStylPrice:{
         fontSize:18,
-        color:"#0fccce",
+        color:"#063970",
         textDecorationLine: 'underline'
 
     },
@@ -356,7 +416,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 5,
-        borderColor: '#0fccce',
+        borderColor: '#063970',
         marginLeft:30
         
     },
@@ -367,7 +427,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 5,
-        backgroundColor: '#0fccce',
+        backgroundColor: '#063970',
         borderColor: 'transparent',
         marginRight:30
     },
@@ -388,16 +448,27 @@ const styles = StyleSheet.create({
         top:-70,
         left:10
     },
+    validateCommnade:{
+        backgroundColor:'#000',
+        display:"flex",
+        flexDirection:'row',
+        justifyContent:'center',
+        paddingVertical:15,
+        borderRadius:10,
+        position:"absolute",
+        width:"100%",
+        bottom:50,
+        zIndex:2,
+    },
+    validateCommnadeText:{
+     color:"#fff",
+     fontSize:20
+    },
     overlay:{
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
        
     }
-    
 
- 
-  
-
-       
     
 })

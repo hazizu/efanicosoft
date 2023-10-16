@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
          backgroundColor:'black',
          width:'40%',
          padding:20,
-         color:'#0fccce',
+         color:'#063970',
          borderRadius:10
       },
       btnInscription:{
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         
       },
       connexion:{
-        color:'#0fccce',
+        color:'#063970',
         textAlign:'center',
         fontSize:16
       },

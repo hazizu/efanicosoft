@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         textDecorationLine: 'underline',
-        color: '#0fccce'
+        color: '#063970'
     },
     cardActionMoin: {
         borderWidth: 1,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 5,
-        borderColor: '#0fccce',
+        borderColor: '#063970',
 
     },
     cardActionPlus: {
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 5,
-        backgroundColor: '#0fccce',
+        backgroundColor: '#063970',
         borderColor: 'transparent'
     },
     plus: {
@@ -226,11 +226,11 @@ const styles = StyleSheet.create({
     },
     moins: {
         fontSize: 20,
-        color: '#0fccce'
+        color: '#063970'
 
     },
     addBtn: {
-        backgroundColor: '#0fccce',
+        backgroundColor: '#063970',
         padding: 10,
         borderRadius: 10,
         width: "100%",

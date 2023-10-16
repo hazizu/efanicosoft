@@ -30,7 +30,7 @@ const style = StyleSheet.create({
 
     registerBtn:{
         padding:10,
-        backgroundColor:'#0fccce',
+        backgroundColor:'#063970',
         justifyContent:'center',
         alignItems:'center',
         textAlign:'center',

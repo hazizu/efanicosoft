@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     price:{
         fontSize:20,
-        color:'#0fccce'
+        color:'#063970'
     },
     quantite:{
       fontSize:20,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         display:"flex",
         fontSize:22,
         padding:10,
-        color:'#0fccce'
+        color:'#063970'
     },
     actionBtn:{
         borderRadius:100/2,

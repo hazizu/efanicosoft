@@ -156,7 +156,7 @@ const style = StyleSheet.create({
       borderRadius:15,
       marginTop:20,
       borderWidth:1,
-      borderColor:'#0fccce'
+      borderColor:'#063970'
     },
     lottieCont:{
       display:'flex',
@@ -176,7 +176,7 @@ const style = StyleSheet.create({
     }, 
    
     regsterText:{
-      color:'#0fccce',
+      color:'#063970',
       fontSize:20
     },
 
@@ -225,7 +225,7 @@ const style = StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         justifyContent:'center',
-        backgroundColor:'#0fccce',
+        backgroundColor:'#063970',
         padding:15,
         borderRadius:15,
         marginTop:20,

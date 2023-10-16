@@ -15,7 +15,7 @@ const Home = () => {
 const style = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:"#0fccce",
+        backgroundColor:"#063970",
         with:'100%'
 
     }

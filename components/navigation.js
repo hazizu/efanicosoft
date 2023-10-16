@@ -16,6 +16,7 @@ import { reaction } from 'mobx';
 import { StyleSheet, Text } from 'react-native';
 import ResumeListe from '../pages/resume/ResumeList';
 import { createStackNavigator } from '@react-navigation/stack';
+import SuiviCommande from '../pages/SuiviCommande/SuiviCommande';
 
 
 
@@ -96,15 +97,22 @@ const Navigation = observer(() => {
           </TouchableOpacity>
         ),
       }} />
+      
       <Stack.Screen name="resumeList" component={ResumeListe} options={{
         headerShown: true, headerRight: () => (
 
           <TouchableOpacity style={styles.notifBlock}>
-            <Text style={styles.notifNumber}>{list.length}</Text>
+            {/* <Text style={styles.notifNumber}>{list.length}</Text> */}
             <Image style={styles.notifBasket} source={require('./../assets/svg/panierLingeContent.png')} />
           </TouchableOpacity>
         )
       }} />
+
+      <Stack.Screen
+      name='suiviCommande'
+      component={SuiviCommande}
+      options={{ headerShown: false }}
+      />
 
     </Stack.Navigator>
     </NavigationContainer>

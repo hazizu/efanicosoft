@@ -18,7 +18,7 @@ const Prestataire = (props) => {
 
 const style = StyleSheet.create({
     container:{
-       backgroundColor:'#0fccce',
+       backgroundColor:'#063970',
        display:'flex',
     flex:1,
        flexDirection:'row',
