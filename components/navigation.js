@@ -17,6 +17,7 @@ import { StyleSheet, Text } from 'react-native';
 import ResumeListe from '../pages/resume/ResumeList';
 import { createStackNavigator } from '@react-navigation/stack';
 import SuiviCommande from '../pages/SuiviCommande/SuiviCommande';
+import MyMap from '../pages/Map/Map';
 
 
 
@@ -111,6 +112,12 @@ const Navigation = observer(() => {
       <Stack.Screen
       name='suiviCommande'
       component={SuiviCommande}
+      options={{ headerShown: false }}
+      />
+
+<Stack.Screen
+      name='myMap'
+      component={MyMap}
       options={{ headerShown: false }}
       />
 

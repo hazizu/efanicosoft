@@ -77,10 +77,14 @@ const SuiviCommande = observer (({navigation})=>{
         return(
             <ScrollView contentContainerStyle={styles.stepContainerS}>
     
-    <TouchableOpacity style={styles.backBtn} onPress={()=>navigation.push('accueil')}>
+    <TouchableOpacity style={styles.backBtn} onPress={()=>navigation.push('myMap')}>
+        <Entypo name='map' size={30} color='#063970' />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.mapBtn} onPress={()=>navigation.push('accueil')}>
         <Entypo name='chevron-left' size={30} color='#063970' />
       </TouchableOpacity>
-    
+
             <View style={styles.stepContainer}>
                 <Text style={styles.titleSuivi}>Suivi commande</Text>
                 <StepIndicator
@@ -187,6 +191,21 @@ const styles = StyleSheet.create({
         position:"fixed",
         top: -10,
         left: 0,
+        height: 40,
+        backgroundColor: '#fff',
+        borderRadius: 100,
+        zIndex:2
+
+    },
+    mapBtn:{
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 40,
+        position:"fixed",
+        top: -10,
+        right: 0,
         height: 40,
         backgroundColor: '#fff',
         borderRadius: 100,

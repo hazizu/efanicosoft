@@ -240,7 +240,7 @@ const ResumeListe = observer(({route,navigation}) =>{
         console.log('list', stores.listeCommande)
         calculPrice(stores.listeCommande)
 
-        const disposer = reaction(
+        const disposer = reaction( 
             () => stores.listeCommande, // Suivre les changements du tableau todos dans le store
             (listCommande) => {
               // Utilisez les tâches récupérées selon vos besoins spécifiques

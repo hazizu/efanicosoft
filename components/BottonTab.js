@@ -76,6 +76,7 @@ const   BottomTab = () => {
                 name="profile"
                 component={Profile}
                 options={{
+                  headerShown:false,
                   tabBarLabel: 'profile',
                   tabBarIcon: ({ color, size }) => (
                     <MaterialIcons name="person" color={color} size={size} />
